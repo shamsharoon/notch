@@ -45,7 +45,26 @@ class BatteryActivityManager {
         timeToFullCharge: 0
     )
 
+    /// Desktop Macs have no internal battery. On them the manager sends no
+    /// events and every battery view stays hidden.
+    static let hasInternalBattery: Bool = {
+        guard let snapshot = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+              let sources = IOPSCopyPowerSourcesList(snapshot)?.takeRetainedValue() as? [CFTypeRef] else {
+            return false
+        }
+        for source in sources {
+            let description = IOPSGetPowerSourceDescription(snapshot, source)?.takeUnretainedValue() as? [String: Any]
+            if description?[kIOPSTypeKey] as? String == kIOPSInternalBatteryType {
+                return true
+            }
+        }
+        return false
+    }()
+
     private init() {
+        guard Self.hasInternalBattery else {
+            return
+        }
         startMonitoring()
         setupLowPowerModeObserver()
     }
