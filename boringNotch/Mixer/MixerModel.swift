@@ -65,9 +65,12 @@ final class MixerModel: ObservableObject {
         return settings[appID] ?? .full
     }
 
+    /// Values near the top snap to 100%, so reaching full volume (and
+    /// dropping the tap) is easy. Changing the volume unmutes.
     func setVolume(_ value: Double, for appID: String) {
         var setting = setting(for: appID)
-        setting.volume = value >= 0.995 ? 1 : value
+        setting.volume = value >= 0.97 ? 1 : value
+        setting.muted = false
         save(setting, for: appID)
     }
 
