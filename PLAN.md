@@ -5,7 +5,7 @@ Goal: the user's own notch app with music controls, plus a per-app volume Mixer 
 Active plan: [docs/plans/active/2026-11-26-v1.md](docs/plans/active/2026-11-26-v1.md)
 
 ## Where I stopped
-Step 3 of 6 (code) done: Mixer core builds in `boringNotch/Mixer/` and starts at launch. Next: the Mixer tab in the notch.
+Step 4 of 6 (code) done: the notch has a Mixer tab (built, not yet seen). Next: the menu bar panel.
 
 ## Next action
 Finish the v1 code, then the user runs the sound checks in `features.json`.
