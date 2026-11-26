@@ -27,14 +27,13 @@ struct MenuBarPanel: View {
             .padding(.horizontal, -8)
         }
         .padding(14)
-        .frame(width: 360)
+        .frame(width: 380)
     }
 }
 
 private struct PanelButton: View {
     let title: String
     let action: () -> Void
-    @State private var hovering = false
 
     var body: some View {
         Button(action: action) {
@@ -42,13 +41,8 @@ private struct PanelButton: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(
-                    hovering ? Color.primary.opacity(0.08) : Color.clear,
-                    in: RoundedRectangle(cornerRadius: 6)
-                )
                 .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .onHover { hovering = $0 }
+        .buttonStyle(HoverPressStyle(cornerRadius: 6))
     }
 }
