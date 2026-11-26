@@ -5,7 +5,7 @@ Goal: the user's own notch app with music controls, plus a per-app volume Mixer 
 Active plan: [docs/plans/active/2026-11-26-v1.md](docs/plans/active/2026-11-26-v1.md)
 
 ## Where I stopped
-Xcode 27.2 installed; upstream baseline builds. Building v1 (identity, Sparkle off, Mixer tab, menu bar panel).
+Step 1 of 6 (code) done: the app builds as `Notch.app` with bundle ID `local.notch`. Next: Sparkle off.
 
 ## Next action
 Finish the v1 code, then the user runs the sound checks in `features.json`.
