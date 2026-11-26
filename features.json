@@ -1,0 +1,104 @@
+[
+  {
+    "id": "fork-runs-as-own-app",
+    "description": "The fork builds in Xcode and runs as its own app with its own name and bundle ID, separate from the official Boring Notch",
+    "steps": ["Open boringNotch.xcodeproj in Xcode", "Build and run", "See the notch app start", "Check Activity Monitor shows the fork's own name", "Check the app and XPC helper bundle IDs no longer start with theboringteam"],
+    "passes": false
+  },
+  {
+    "id": "no-upstream-updates",
+    "description": "The fork never checks for or installs upstream boring.notch updates",
+    "steps": ["Open the menu bar panel", "See no 'Check for Updates' button", "Run for 10 minutes with `lsof -i -a -p <pid>` and see no connection to TheBoredTeam.github.io"],
+    "passes": false
+  },
+  {
+    "id": "music-controls",
+    "description": "The notch shows the current song with artwork and controls it in Apple Music and Spotify",
+    "steps": ["Play a song in Apple Music", "Hover the notch and see title, artist and artwork", "Click pause, play, next and previous, and hear each work", "Repeat with Spotify"],
+    "passes": false
+  },
+  {
+    "id": "existing-features-still-work",
+    "description": "The Shelf tab and the other notch features still work after the Mixer is added",
+    "steps": ["Open the notch", "Click Shelf and drop a file on it", "See the file on the shelf", "Click Home and see music controls"],
+    "passes": false
+  },
+  {
+    "id": "mixer-tab",
+    "description": "The notch has a Mixer tab listing every app that uses sound, playing apps first with a green dot",
+    "steps": ["Play music", "Open the notch", "Click the Mixer tab next to Home and Shelf", "See the music app at the top with a green dot", "See other sound-using apps below it"],
+    "passes": false
+  },
+  {
+    "id": "mixer-menu-bar-panel",
+    "description": "Clicking the app's menu bar icon opens a panel with the same Mixer sliders plus Settings, Restart and Quit",
+    "steps": ["Click the menu bar icon", "See the same apps and volumes as the Mixer tab", "Change a volume in the panel and see the Mixer tab show it", "Click Settings and see the settings window"],
+    "passes": false
+  },
+  {
+    "id": "permission-prompt",
+    "description": "The first volume change asks for System Audio Recording permission, and a denied permission shows a message saying where to enable it",
+    "steps": ["Remove the app from System Settings > Privacy & Security > Screen & System Audio Recording", "Drag an app below 100% in the Mixer", "See the macOS permission prompt", "Deny it and see the message in the Mixer", "Allow it in System Settings and see the volume change work"],
+    "passes": false
+  },
+  {
+    "id": "per-app-volume",
+    "description": "Dragging one app's slider changes only that app's volume, right away",
+    "steps": ["Play music and a YouTube video in a browser", "Drag the music app to 30%", "Hear the music get quieter", "Hear the browser stay the same"],
+    "passes": false
+  },
+  {
+    "id": "per-app-mute",
+    "description": "The speaker button mutes and unmutes one app",
+    "steps": ["Play music", "Click the music app's speaker button", "Hear silence from music only and see 'Muted'", "Click it again and hear music back at its slider volume"],
+    "passes": false
+  },
+  {
+    "id": "helper-apps-grouped",
+    "description": "Apps that play sound from helper processes (Discord, Chrome, Safari) show as one row and are controlled as one",
+    "steps": ["Open Discord, Chrome and Safari, each playing sound", "Open the Mixer", "See exactly one row each for Discord, Chrome and Safari", "Lower each one and hear its sound change"],
+    "passes": false
+  },
+  {
+    "id": "mix-four-apps",
+    "description": "A game, a call app, a music app and Discord play at four different volumes at the same time",
+    "steps": ["Run a game, a call, music, and Discord notifications", "Set them to 80%, 100%, 20% and 40%", "Hear each at its set level for 5 minutes"],
+    "passes": false
+  },
+  {
+    "id": "clean-sound",
+    "description": "Turned-down apps have no pops, crackles, delay or stutter during long use",
+    "steps": ["Set a game or call app to 60%", "Play or talk for 30 minutes", "Hear no pops, crackles or stutter, and no noticeable delay against the video"],
+    "passes": false
+  },
+  {
+    "id": "untouched-at-100",
+    "description": "Apps at 100% are never tapped and play exactly as without the Mixer",
+    "steps": ["Set one app to 50% and leave another at 100%", "Confirm only one tap exists, for the 50% app", "Drag it back to 100% and confirm its tap is removed"],
+    "passes": false
+  },
+  {
+    "id": "remember-volumes",
+    "description": "Each app's volume and mute come back after the app restarts, the notch app restarts, and the Mac reboots",
+    "steps": ["Set Discord to 30% and mute Music", "Quit and reopen Discord and hear it at 30%", "Restart the notch app and see the same settings", "Reboot and hear Discord at 30% and Music muted"],
+    "passes": false
+  },
+  {
+    "id": "follow-output-device",
+    "description": "Volumes stay correct when switching between speakers, wired headphones and AirPods while audio plays",
+    "steps": ["Play music at 30% on speakers", "Connect AirPods and hear 30%", "Plug in wired headphones and hear 30%", "Unplug and hear 30% on speakers"],
+    "passes": false
+  },
+  {
+    "id": "quit-restores-sound",
+    "description": "Quitting or force-killing the notch app leaves no app silent",
+    "steps": ["Set music to 20% and mute Discord", "Click Quit and hear both at normal volume", "Reopen the app and run `kill -9` on it", "Hear both at normal volume"],
+    "passes": false
+  },
+  {
+    "id": "mixer-privacy",
+    "description": "The Mixer adds no network code and writes no audio to disk",
+    "steps": ["Search the Mixer files for URLSession, Network and file writes, and find none", "Run with two apps turned down for 10 minutes and see no new files with audio in the app's container"],
+    "passes": false
+  }
+]
