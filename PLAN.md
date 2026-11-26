@@ -2,13 +2,13 @@
 
 Goal: the user's own notch app with music controls, plus a per-app volume Mixer as a notch tab and in the menu bar icon's panel.
 
-Active plan: none yet.
+Active plan: [docs/plans/active/2026-11-26-v1.md](docs/plans/active/2026-11-26-v1.md)
 
 ## Where I stopped
-Spec written (`SPEC.md`, `features.json`, `AGENTS.md`). Upstream cloned at `b7611bb`; no code changed yet. Blocked: Xcode is not installed.
+Xcode 27.2 installed; upstream baseline builds. Building v1 (identity, Sparkle off, Mixer tab, menu bar panel).
 
 ## Next action
-Install Xcode from the App Store, then build v1 from SPEC.md.
+Finish the v1 code, then the user runs the sound checks in `features.json`.
 
 ## Backlog
-Own GitHub fork (ask first) · custom app name and icon · pull upstream updates by hand
+Own GitHub fork (ask first) · custom app icon · pull upstream updates by hand
