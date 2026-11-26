@@ -99,7 +99,7 @@ final class MixerModel: ObservableObject {
         for (appID, tap) in taps {
             let app = appsByID[appID]
             let stillNeeded = app != nil && setting(for: appID).needsTap
-            let sameProcesses = app?.processObjectIDs == tap.processObjectIDs
+            let sameProcesses = app.map { Set($0.processObjectIDs) } == Set(tap.processObjectIDs)
             if !stillNeeded || !sameProcesses {
                 tap.stop()
                 taps[appID] = nil
