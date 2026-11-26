@@ -28,10 +28,17 @@ extension Defaults.Keys {
 final class MixerModel: ObservableObject {
     static let shared = MixerModel()
 
-    @Published private(set) var apps: [AudioApp] = []
+    /// Apps playing now or within the last `showGracePeriod` seconds. Rows
+    /// stay a little after sound stops, so they don't flicker between songs.
+    @Published private(set) var visibleApps: [AudioApp] = []
     @Published private(set) var settings: [String: MixerSetting] = Defaults[.mixerSettings]
     @Published private(set) var errorMessage: String?
 
+    /// Every app with an audio process, shown or not, so a saved setting
+    /// applies the moment a quiet app starts playing.
+    private var apps: [AudioApp] = []
+    private var lastActive: [String: Date] = [:]
+    private let showGracePeriod: TimeInterval = 8
     private var taps: [String: AppVolumeTap] = [:]
     private var outputDeviceID: AudioObjectID?
     private var timer: Timer?
@@ -71,21 +78,30 @@ final class MixerModel: ObservableObject {
     }
 
     private func save(_ setting: MixerSetting, for appID: String) {
+        lastActive[appID] = Date()
         settings[appID] = setting.needsTap ? setting : nil
         Defaults[.mixerSettings] = settings
         applyTaps()
     }
 
     private func refresh() {
-        var scanned = AudioAppScanner.scan()
-        scanned.sort { first, second in
-            if first.isPlaying != second.isPlaying {
-                return first.isPlaying
-            }
-            return first.name.localizedCaseInsensitiveCompare(second.name) == .orderedAscending
-        }
-        apps = scanned
+        apps = AudioAppScanner.scan()
+        updateVisibleApps()
         applyTaps()
+    }
+
+    private func updateVisibleApps() {
+        let now = Date()
+        var visible: [AudioApp] = []
+        for app in apps {
+            if app.isPlaying {
+                lastActive[app.id] = now
+            }
+            if let last = lastActive[app.id], now.timeIntervalSince(last) < showGracePeriod {
+                visible.append(app)
+            }
+        }
+        visibleApps = visible
     }
 
     // MARK: - Taps

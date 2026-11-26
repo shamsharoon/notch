@@ -8,6 +8,7 @@ private let rowSpacing: CGFloat = 4
 /// its rows (the menu bar panel), scrolling past 360 points.
 struct MixerList: View {
     @ObservedObject var model = MixerModel.shared
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -18,16 +19,19 @@ struct MixerList: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            if model.apps.isEmpty {
-                Text("No apps are using sound right now.")
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if model.visibleApps.isEmpty {
+                Text("Nothing is playing")
+                    .font(.callout)
+                    .foregroundStyle(Color.primary.opacity(0.4))
+                    .frame(maxWidth: .infinity, minHeight: rowHeight, maxHeight: .infinity)
+                    .transition(.opacity)
             } else {
-                let count = CGFloat(model.apps.count)
+                let count = CGFloat(model.visibleApps.count)
                 ScrollView {
                     VStack(spacing: rowSpacing) {
-                        ForEach(model.apps) { app in
+                        ForEach(model.visibleApps) { app in
                             MixerRow(app: app, setting: model.setting(for: app.id))
+                                .transition(rowTransition)
                         }
                     }
                 }
@@ -36,7 +40,20 @@ struct MixerList: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .animation(.mixerEntrance, value: model.visibleApps.map(\.id))
     }
+
+    /// Rows rise 6 points as they fade in, and only fade under Reduce Motion.
+    private var rowTransition: AnyTransition {
+        if reduceMotion {
+            return .opacity
+        }
+        return .asymmetric(insertion: .opacity.combined(with: .offset(y: 6)), removal: .opacity)
+    }
+}
+
+extension Animation {
+    static let mixerEntrance = Animation.timingCurve(0.2, 0.7, 0.2, 1, duration: 0.2)
 }
 
 private struct MixerRow: View {
