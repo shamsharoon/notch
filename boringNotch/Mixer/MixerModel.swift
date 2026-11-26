@@ -39,7 +39,12 @@ final class MixerModel: ObservableObject {
     private var apps: [AudioApp] = []
     private var lastActive: [String: Date] = [:]
     private let showGracePeriod: TimeInterval = 8
+    /// Running taps and taps still starting on `tapQueue`.
     private var taps: [String: AppVolumeTap] = [:]
+    /// Every `AppVolumeTap.start` and `stop` runs here, never on main: Core
+    /// Audio can block them for as long as a macOS permission prompt is open.
+    /// Serial, so a tap's stop always runs after its start.
+    private let tapQueue = DispatchQueue(label: "local.notch.mixer.taps")
     private var outputDeviceID: AudioObjectID?
     private var timer: Timer?
 
@@ -52,13 +57,18 @@ final class MixerModel: ObservableObject {
     }
 
     /// Removes every tap, so no app stays quiet or muted after the notch app quits.
+    /// Waits at most 1 second, so a stuck Core Audio call can't hang quit. The
+    /// system removes a process's taps when it exits anyway.
     func stop() {
         timer?.invalidate()
         timer = nil
         for tap in taps.values {
-            tap.stop()
+            tapQueue.async { tap.stop() }
         }
         taps = [:]
+        let drained = DispatchWorkItem {}
+        tapQueue.async(execute: drained)
+        _ = drained.wait(timeout: .now() + 1)
     }
 
     func setting(for appID: String) -> MixerSetting {
@@ -120,7 +130,7 @@ final class MixerModel: ObservableObject {
             let stillNeeded = app != nil && setting(for: appID).needsTap
             let sameProcesses = app.map { Set($0.processObjectIDs) } == Set(tap.processObjectIDs)
             if !stillNeeded || !sameProcesses {
-                tap.stop()
+                tapQueue.async { tap.stop() }
                 taps[appID] = nil
             }
         }
@@ -129,7 +139,7 @@ final class MixerModel: ObservableObject {
             return
         }
 
-        var failure: String?
+        var startedAny = false
         for app in apps {
             let setting = setting(for: app.id)
             if !setting.needsTap {
@@ -140,19 +150,40 @@ final class MixerModel: ObservableObject {
                 continue
             }
             let tap = AppVolumeTap(processObjectIDs: app.processObjectIDs, gain: setting.gain)
+            // Recorded before it starts, so later passes don't start a second
+            // tap for this app while this one waits.
+            taps[app.id] = tap
+            startTap(tap, appID: app.id, appName: app.name, outputDeviceID: outputDeviceID)
+            startedAny = true
+        }
+        // A failed tap is removed from `taps`, so the next pass starts it
+        // again. A pass that starts nothing has no failure left to show.
+        if !startedAny {
+            errorMessage = nil
+        }
+    }
+
+    /// On failure, drops the tap so a later pass retries it, and shows why.
+    private func startTap(_ tap: AppVolumeTap, appID: String, appName: String, outputDeviceID: AudioObjectID) {
+        tapQueue.async {
             do {
                 try tap.start(outputDeviceID: outputDeviceID)
-                taps[app.id] = tap
             } catch {
-                failure = "Couldn't change \(app.name) (\(error.localizedDescription)). Allow Notch in System Settings > Privacy & Security > Screen & System Audio Recording."
+                let message = "Couldn't change \(appName) (\(error.localizedDescription)). Allow Notch in System Settings > Privacy & Security > Screen & System Audio Recording."
+                Task { @MainActor in
+                    // Skip if this tap was stopped or replaced while it started.
+                    if self.taps[appID] === tap {
+                        self.taps[appID] = nil
+                        self.errorMessage = message
+                    }
+                }
             }
         }
-        errorMessage = failure
     }
 
     private func rebuildAllTaps() {
         for tap in taps.values {
-            tap.stop()
+            tapQueue.async { tap.stop() }
         }
         taps = [:]
         applyTaps()

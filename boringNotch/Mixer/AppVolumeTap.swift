@@ -18,7 +18,10 @@ final class GainBox: @unchecked Sendable {
 /// 2. A private aggregate device combines that tap (as input) with the
 ///    speakers (as output).
 /// 3. Our callback copies input to output, multiplied by the gain.
-final class AppVolumeTap {
+///
+/// `start` and `stop` run only on `MixerModel`'s tap queue, which is the one
+/// place that touches the Core Audio IDs below. `gain` may be set from any thread.
+final class AppVolumeTap: @unchecked Sendable {
     let processObjectIDs: [AudioObjectID]
     let gain: GainBox
 
