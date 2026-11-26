@@ -1,7 +1,5 @@
 import SwiftUI
 
-/// The menu bar icon's panel: the same Mixer rows as the notch tab, then
-/// the app's own commands.
 struct MenuBarPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
