@@ -117,7 +117,6 @@ final class AppVolumeTap {
                 }
                 memset(outputBytes, 0, Int(output.mDataByteSize))
 
-                // Only the first output stream gets the app's audio.
                 if outputIndex != 0 || tapBufferIndex >= inputs.count {
                     continue
                 }

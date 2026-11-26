@@ -1,8 +1,6 @@
 import CoreAudio
 import Foundation
 
-// Small wrappers around the Core Audio property API, which is C-style and verbose.
-
 func makeAddress(
     _ selector: AudioObjectPropertySelector,
     scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal

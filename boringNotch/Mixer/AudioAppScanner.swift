@@ -2,7 +2,7 @@ import AppKit
 import CoreAudio
 import Darwin
 
-/// One row in the menu: an app plus every audio process that belongs to it.
+/// One Mixer row: an app plus every audio process that belongs to it.
 /// Apps like Discord, Chrome, and Safari play sound from helper processes,
 /// so one app can own several Core Audio process objects.
 struct AudioApp: Identifiable {

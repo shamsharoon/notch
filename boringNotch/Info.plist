@@ -7,6 +7,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>Notch needs this to change each app's volume. Audio is never saved or sent.</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict/>

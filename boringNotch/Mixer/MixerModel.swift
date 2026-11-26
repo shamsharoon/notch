@@ -24,8 +24,6 @@ extension Defaults.Keys {
     static let mixerSettings = Key<[String: MixerSetting]>("mixerSettings", default: [:])
 }
 
-/// Keeps the list of apps, remembers each app's setting, and makes sure
-/// every app below 100% (or muted) has a running tap.
 @MainActor
 final class MixerModel: ObservableObject {
     static let shared = MixerModel()
@@ -98,8 +96,6 @@ final class MixerModel: ObservableObject {
             appsByID[app.id] = app
         }
 
-        // Remove taps that are no longer needed: the app quit, went back to 100%,
-        // or its audio processes changed.
         for (appID, tap) in taps {
             let app = appsByID[appID]
             let stillNeeded = app != nil && setting(for: appID).needsTap
