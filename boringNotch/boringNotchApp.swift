@@ -82,6 +82,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             screenUnlockedObserver = nil
         }
         MusicManager.shared.destroy()
+        MixerModel.shared.stop()
         cleanupDragDetectors()
         cleanupWindows()
         XPCHelperClient.shared.stopMonitoringAccessibilityAuthorization()
@@ -435,6 +436,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         previousScreens = NSScreen.screens
+        MixerModel.shared.start()
     }
 
     func playWelcomeSound() {
