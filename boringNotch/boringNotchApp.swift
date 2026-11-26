@@ -29,7 +29,7 @@ struct DynamicNotchApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("Notch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
+        MenuBarExtra("Notch", systemImage: "slider.horizontal.3", isInserted: $showMenuBarIcon) {
             MenuBarPanel()
         }
         .menuBarExtraStyle(.window)
