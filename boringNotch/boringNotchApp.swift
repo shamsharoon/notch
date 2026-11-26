@@ -29,22 +29,10 @@ struct DynamicNotchApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("boring.notch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
-            Button("Settings") {
-                DispatchQueue.main.async {
-                    SettingsWindowController.shared.showWindow()
-                }
-            }
-            .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
-            Divider()
-            Button("Restart Boring Notch") {
-                ApplicationRelauncher.restart()
-            }
-            Button("Quit", role: .destructive) {
-                NSApplication.shared.terminate(self)
-            }
-            .keyboardShortcut(KeyEquivalent("Q"), modifiers: .command)
+        MenuBarExtra("Notch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
+            MenuBarPanel()
         }
+        .menuBarExtraStyle(.window)
     }
 }
 
