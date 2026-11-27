@@ -11,4 +11,4 @@ Mixer polish done: battery UI hidden on Macs with no battery (`ea4b038`), only a
 Answer the open macOS prompts (then allow Notch for System Audio Recording if asked), open the notch's Mixer tab, and try hover, a drag to the top, mute, and a double-click on the percent.
 
 ## Backlog
-Own GitHub fork (ask first) · custom app icon · pull upstream updates by hand · sign Debug builds with a stable identity so permissions survive rebuilds
+custom app icon · pull upstream updates by hand · sign Debug builds with a stable identity so permissions survive rebuilds
