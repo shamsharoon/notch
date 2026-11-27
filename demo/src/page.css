@@ -1,0 +1,13 @@
+/* The host page only: a quiet ground and a column the demo sits in. */
+html,
+body {
+  margin: 0;
+  background: #f6f5f0;
+}
+
+.page {
+  box-sizing: border-box;
+  max-width: 732px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
