@@ -2,7 +2,7 @@
 
 This is the user's personal fork of boring.notch (GPL-3.0). Read `SPEC.md` first; it defines v1. `PLAN.md` says where work stopped.
 
-Build: open `boringNotch.xcodeproj` in Xcode, or use `xcodebuild`. This needs full Xcode, not just Command Line Tools.
+Build: `scripts/build-debug.sh` (signs with the local "Notch Local Signing" certificate so permissions survive rebuilds). Needs full Xcode, not just Command Line Tools.
 
 Use pstack: start work with `/pstack:poteto-mode`.
 
