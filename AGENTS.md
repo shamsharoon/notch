@@ -16,6 +16,6 @@ Use pstack: start work with `/pstack:poteto-mode`.
 - Never save, send, or log app audio. The Mixer adds no network code.
 - Never tap an app that is at 100% and not muted.
 - Keep Sparkle updates off, so upstream releases never replace this fork.
-- Push only to `fork` (private repo github.com/shamsharoon/notch, branch `notch-mixer`). Never push to `origin`: it is upstream TheBoredTeam.
+- Push only to `fork` (public repo github.com/shamsharoon/notch, branch `notch-mixer`; releases are tagged `notch-vX.Y.Z` with `Notch.zip`). Never push to `origin`: it is upstream TheBoredTeam.
 - Sound checks need the user's ears. Ask them to run the steps and report back. A passing build is not proof.
 - Keep Mixer code in its own folder (`boringNotch/Mixer/`), so upstream changes merge cleanly.
